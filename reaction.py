@@ -37,13 +37,6 @@ class reaction():
     def set_rate_constant(self, rate_constant, value):
         self.rate_cons[rate_constant] = value
 
-    def show_equations(self):
-        if len(self.equ) != 0:
-            for item in self.equ:
-                print('{}\tconstant:{}'.format(item[0], item[1]))
-        else:
-            print('No equations!')
-
     def take_reactions(self, ini, steps, factor=1):
         self.factor = factor
         self.count_reactants()
@@ -112,6 +105,14 @@ class reaction():
             self.reactant[item][present_step+1] = self.reactant[item][present_step]
 
     def take_one_step_reactions(self, present_step, factor):
+        '''
+        用以模拟一个时间点上的反应。反应结果直接在self.reactant(反应物变化)和self.rate(反应速率变化)中记录。
+        输入:
+        present_step:   整数, 当前时间点
+        factor:         正数, 反应速率常数的系数, 例如相邻时间点间隔1分钟则factor为60
+        返回:
+        无
+        '''
         k = 0
         for eq in self.equ:
             tmp = eq[0].split('->')
@@ -153,8 +154,6 @@ class reaction():
         plsq = leastsq(self.error_function, x0=p0, args=y)[0]
         return plsq
 
-
-
     def dic2list(self, D):
         res = []
         for item in sorted(D.keys()):
@@ -170,8 +169,10 @@ class reaction():
         ret = np.sum(mat_tmp, axis=0)
         return ret
 
-
-
+    def display_settings(self):
+        print('Reactions:')
+        for item in self.equ:
+            print('{:^25}\tconstant:{}'.format(item[0], item[1]))
 
     def plot_datum(self, target, figsize=(16, 9)):
         plt.figure(figsize=figsize)
@@ -225,12 +226,7 @@ if __name__ == '__main__':
     r.add_equation('if2s+f->fs+i+f2', 'k2')
     r.add_equation('if2ps+f->fs+i+f2p', 'k2')
 
-    r.show_equations()
     r.count_reactants()
     r.set_rate_constant('k0', 2.24e-9)
     r.set_rate_constant('k1', 9.25e3)
     r.set_rate_constant('k2', 4.04e2)
-    #r.show_init_template()
-
-
-    
