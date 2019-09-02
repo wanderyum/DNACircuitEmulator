@@ -62,18 +62,6 @@ class reaction():
         for item in s:
             self.reactant[item] = None
 
-    def show_init_gen(self):
-        print('def ')
-        for item in self.reactant:
-            print('ini[\'{}\'] = 0'.format(item))
-
-    def gen_ini_func(self):
-        with open('gen_ini.py', 'w') as f:
-            print('def gen_ini(D):\n    ini = {}', file=f)
-            for key in self.reactant:
-                print('    ini[\'{}\'] = 0'.format(key), file=f)
-            print('    for key in D:\n        ini[key] = D[key]\n    return ini', file=f)
-
     def init(self, D):
         '''
         用于产生一条初始浓度设置。除用户指定物质浓度外, 其它都置0。
@@ -101,6 +89,13 @@ class reaction():
             self.rate[i] = np.linspace(0, 0, steps-1)
 
     def reaction_init(self, present_step):
+        '''
+        在模拟每一个时间点反应之前, 将当前时间点值赋给后一时间点。这样计算后一时间点时仅修改后一时间点值即可。
+        输入:
+        present_step:   整数, 当前时间点
+        返回:
+        无
+        '''
         for item in self.reactant:
             self.reactant[item][present_step+1] = self.reactant[item][present_step]
 
