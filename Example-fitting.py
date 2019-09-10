@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import os
 import sys
-os.chdir(os.path.dirname(sys.argv[0]))
+if sys.platform != 'win32':
+    os.chdir(os.path.dirname(sys.argv[0]))
 
 
 r = reaction()
